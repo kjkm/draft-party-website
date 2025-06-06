@@ -4,6 +4,7 @@ import AnimatedBackground from "./molecules/AnimatedBackground";
 import TopMenu from "./molecules/TopMenu";
 import ParallaxBackground from "./molecules/ParallaxBackground";
 import DustBackground from "./molecules/DustBackground";
+import GoButton from "./molecules/atoms/particles/GoButton";
 
 const handleClick = (e: MouseEvent) => {
   confetti("tsparticles", {
@@ -35,6 +36,12 @@ function App() {
         <ParallaxBackground />
         <DustBackground />
         <AnimatedBackground />
+        <div className="relative h-screen">
+          <GoButton
+            className="fixed top-[60%] left-[50%] -translate-x-1/2 -translate-y-1/2"
+            onClick={() => console.log("Party started!")}
+          />
+        </div>
       </div>
     </>
   );
