@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-    --color-sunshine: #ebf5df;
-    --color-malachite: #bad4aa;
-    --color-sandstone: #d4d4aa;
-    --color-sunrise: #edb458;
-    --color-papaya: #e8871e;
+  --color-sunshine: #ebf5df;
+  --color-malachite: #bad4aa;
+  --color-sandstone: #d4d4aa;
+  --color-sunrise: #edb458;
+  --color-papaya: #e8871e;
 }
 
 canvas {
-    pointer-events: none;
+  pointer-events: none;
 }

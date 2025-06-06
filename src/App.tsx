@@ -1,9 +1,8 @@
-import { useEffect } from 'react'
-import { confetti } from '@tsparticles/confetti'
-import AnimatedBackground from './molecules/AnimatedBackground'
-import TopMenu from './molecules/TopMenu';
-import ParallaxBackground from './molecules/ParallaxBackground';
-
+import { useEffect } from "react";
+import { confetti } from "@tsparticles/confetti";
+import AnimatedBackground from "./molecules/AnimatedBackground";
+import TopMenu from "./molecules/TopMenu";
+import ParallaxBackground from "./molecules/ParallaxBackground";
 
 const handleClick = (e: MouseEvent) => {
   confetti("tsparticles", {
@@ -21,22 +20,22 @@ const handleClick = (e: MouseEvent) => {
 
 function App() {
   useEffect(() => {
-    window.addEventListener('click', handleClick)
+    window.addEventListener("click", handleClick);
 
     return () => {
-      window.removeEventListener('click', handleClick)
-    }
+      window.removeEventListener("click", handleClick);
+    };
   }, []);
 
   return (
     <>
-      <div className="h-screen bg-sunshine ">
+      <div className="h-screen bg-sunshine overflow-hidden">
         <TopMenu />
         <ParallaxBackground />
         <AnimatedBackground />
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
