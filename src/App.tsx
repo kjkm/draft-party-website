@@ -3,6 +3,7 @@ import { confetti } from "@tsparticles/confetti";
 import AnimatedBackground from "./molecules/AnimatedBackground";
 import TopMenu from "./molecules/TopMenu";
 import ParallaxBackground from "./molecules/ParallaxBackground";
+import DustBackground from "./molecules/DustBackground";
 
 const handleClick = (e: MouseEvent) => {
   confetti("tsparticles", {
@@ -32,6 +33,7 @@ function App() {
       <div className="h-screen bg-sunshine overflow-hidden">
         <TopMenu />
         <ParallaxBackground />
+        <DustBackground />
         <AnimatedBackground />
       </div>
     </>
