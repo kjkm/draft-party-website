@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { confetti } from '@tsparticles/confetti'
 import AnimatedBackground from './molecules/AnimatedBackground'
 import TopMenu from './molecules/TopMenu';
+import ParallaxBackground from './molecules/ParallaxBackground';
 
 
 const handleClick = (e: MouseEvent) => {
@@ -31,6 +32,7 @@ function App() {
     <>
       <div className="h-screen bg-sunshine ">
         <TopMenu />
+        <ParallaxBackground />
         <AnimatedBackground />
       </div>
     </>

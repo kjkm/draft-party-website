@@ -1,9 +1,9 @@
-import React, {useEffect, useRef} from "react";
-import { startLavaLamp } from "./atoms/LavaLampCanvas";
-import type { ClusterConfig, WandererConfig, TextConfig } from "./atoms/LavaLampCanvas";
-import { hexToRGBA } from "./atoms/particles/ColorUtils";
+import React, { useEffect, useRef } from 'react';
+import { startLavaLamp } from './atoms/LavaLampCanvas';
+import type { ClusterConfig, WandererConfig, TextConfig } from './atoms/LavaLampCanvas';
+import { hexToRGBA } from './atoms/particles/ColorUtils';
 
-const AnimatedBackground: React.FC = () => {
+const ParallaxBackground: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     
     useEffect(() => {
@@ -19,7 +19,7 @@ const AnimatedBackground: React.FC = () => {
 
         document.fonts.load('700 48px Oswald').then(() => {
             const dynamicFontSize = Math.min(canvas.width / 10, 104);
-            const lavaColor = hexToRGBA('#bad4aa');
+            const lavaColor = hexToRGBA('#f7b5ff');
             const backgroundColor = hexToRGBA('#000000', 0);
 
             const clusterConfig: ClusterConfig = {
@@ -32,21 +32,21 @@ const AnimatedBackground: React.FC = () => {
             };
 
             const wandererConfig: WandererConfig = {
-                speed: 0.2,
+                speed: 0.08,
                 xAmplitude: 0.45,
                 yAmplitude: 0.45,
-                baseSize: 0.12,
+                baseSize: 0.2,
                 sizeAmplitude: 0.05
             };
 
             const textConfig: TextConfig = {
-                content: 'PRO.\nGRAMMING.\nPARTY!',
+                content: '',
                 font: 'oswald',
                 color: '#000000',
                 featureColor: '#e8871e',
                 textAlign: 'left',
                 fontSize: dynamicFontSize,
-                textPosition: [0.25, 0.4]
+                textPosition: [0.25, 0.5]
             };
 
             startLavaLamp(
@@ -54,7 +54,7 @@ const AnimatedBackground: React.FC = () => {
                 lavaColor,
                 backgroundColor,
                 20,
-                3,
+                5,
                 clusterConfig,
                 wandererConfig,
                 textConfig
@@ -75,4 +75,4 @@ const AnimatedBackground: React.FC = () => {
     );
 };
 
-export default AnimatedBackground;
+export default ParallaxBackground;
