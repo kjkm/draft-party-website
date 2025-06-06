@@ -7,3 +7,7 @@
     --color-sunrise: #edb458;
     --color-papaya: #e8871e;
 }
+
+canvas {
+    pointer-events: none;
+}
