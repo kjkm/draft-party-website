@@ -1,6 +1,16 @@
 import vertexShaderSource from './particles/vert.glsl?raw';
 import fragmentShaderSource from './particles/frag.glsl?raw';
 
+type RGBA = [number, number, number, number];
+
+/**
+ * Creates a WebGL shader from the given source code.
+ * @param gl - The WebGL rendering context.
+ * @param type - The type of shader (vertex or fragment).
+ * @param source - The GLSL source code for the shader.
+ * @returns The compiled WebGLShader object.
+ * @throws Will throw an error if shader creation or compilation fails.
+ */
 function createShader(gl: WebGLRenderingContext, type: number, source: string): WebGLShader {
   const shader = gl.createShader(type);
   if (!shader) throw new Error('oopsies, failed to create shader');
@@ -14,6 +24,14 @@ function createShader(gl: WebGLRenderingContext, type: number, source: string): 
   return shader;
 }
 
+/**
+ * Creates a WebGL program by linking vertex and fragment shaders.
+ * @param gl - The WebGL rendering context.
+ * @param vsSource - The GLSL source code for the vertex shader.
+ * @param fsSource - The GLSL source code for the fragment shader.
+ * @returns The linked WebGLProgram object.
+ * @throws Will throw an error if program creation or linking fails.
+ */
 function createProgram(gl: WebGLRenderingContext, vsSource: string, fsSource: string): WebGLProgram {
   const vertexShader = createShader(gl, gl.VERTEX_SHADER, vsSource);
   const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
@@ -33,12 +51,92 @@ function createProgram(gl: WebGLRenderingContext, vsSource: string, fsSource: st
   return program;
 }
 
-type RGBA = [number, number, number, number];
+function renderTextToCanvas(
+  canvas: HTMLCanvasElement,
+  text: string,
+  font: string,
+  color: string,
+  featureColor: string,
+  textAlign: CanvasTextAlign = 'left',
+  fontSize: number = 104,
+  textPosition: [number, number] = [0.5, 0.5]
+) {
+  const splitText = text.split('\n');
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Failed to get 2D context');
+
+  for (let i = 0; i < splitText.length; i++) {
+    if (i === splitText.length - 1) {
+      ctx.font = `italic ${fontSize}px ${font}`;
+      ctx.fillStyle = featureColor;
+    } else {
+      ctx.font = `${fontSize}px ${font}`;
+      ctx.fillStyle = color;
+    }
+    ctx.textAlign = textAlign;
+    const x = canvas.width * textPosition[0];
+    const y = canvas.height * textPosition[1] + i * fontSize;
+    ctx.fillText(splitText[i], x, y);
+  }
+}
+
+export interface TextConfig {
+  content: string;              
+  font: string;              
+  color: string;             
+  featureColor: string;      
+  textAlign?: CanvasTextAlign;
+  fontSize?: number;         
+  textPosition?: [number, number];
+}
+
+export interface ClusterConfig {
+  speed: number;        
+  xAmplitude: number;   
+  baseY: number;        
+  yAmplitude: number;    
+  sizeBase: number;      
+  sizeAmplitude: number; 
+}
+
+export interface WandererConfig {
+  speed: number;         
+  xAmplitude: number;    
+  yAmplitude: number;    
+  baseSize: number;      
+  sizeAmplitude: number;
+}
 
 export function startLavaLamp(
   canvas: HTMLCanvasElement,
-  lavaColor: RGBA = [0.91, 0.53, 0.12, 1], 
-  backgroundColor: RGBA = [0, 0, 0, 0]
+  lavaColor: RGBA = [0.91, 0.53, 0.12, 1],
+  backgroundColor: RGBA = [0, 0, 0, 0],
+  clusterCount: number = 20,
+  wandererCount: number = 3,
+  clusterConfig: ClusterConfig = { 
+    speed: 0.3, 
+    xAmplitude: 0.03, 
+    baseY: 0.1, 
+    yAmplitude: 0.05, 
+    sizeBase: 0.05, 
+    sizeAmplitude: 0.03 
+  },
+  wandererConfig: WandererConfig = { 
+    speed: 0.2, 
+    xAmplitude: 0.45, 
+    yAmplitude: 0.45, 
+    baseSize: 0.12, 
+    sizeAmplitude: 0.05 
+  },
+  textConfig: TextConfig = {
+    content: 'HELLO\nWORLD',
+    font: 'oswald',
+    color: '#000000',
+    featureColor: '#bad4aa',
+    textAlign: 'left',
+    fontSize: 104,
+    textPosition: [0.25, 0.5]
+  }
 ) {
   const gl = canvas.getContext("webgl");
   if (!gl) throw new Error("WebGL not supported");
@@ -72,29 +170,21 @@ export function startLavaLamp(
   const u_blobCountLocation = gl.getUniformLocation(program, 'u_blobCount');
   const u_blobsLocation = gl.getUniformLocation(program, 'u_blobs');
 
+  // Set up the text canvas
   const textCanvas = document.createElement('canvas');
   textCanvas.width = canvas.width;
   textCanvas.height = canvas.height;
-  const ctx = textCanvas.getContext('2d');
-  if (!ctx) throw new Error('Failed to get 2D context');
 
-  const dynamicFontSize = Math.min(canvas.width / 10, 104);
-  console.log('Dynamic font size:', dynamicFontSize);
-
-  ctx.font = `700 ${dynamicFontSize}px oswald`;
-  ctx.fillStyle = 'black';
-  ctx.fillText('PRO', textCanvas.width / 4, textCanvas.height / 2, textCanvas.width);
-  ctx.textAlign = 'left';
-
-  ctx.font = `700 ${dynamicFontSize}px oswald`;
-  ctx.fillStyle = 'black';
-  ctx.fillText('GRAMMING', textCanvas.width / 4, textCanvas.height / 2 + dynamicFontSize, textCanvas.width);
-  ctx.textAlign = 'left';
-
-  ctx.font = `700 italic ${dynamicFontSize}px oswald`;
-  ctx.fillStyle = '#bad4aa';
-  ctx.fillText('PARTY', textCanvas.width / 4, textCanvas.height / 2 + 2 * dynamicFontSize, textCanvas.width);
-  ctx.textAlign = 'left';
+  renderTextToCanvas(
+    textCanvas,
+    textConfig.content,
+    textConfig.font,
+    textConfig.color,
+    textConfig.featureColor,
+    textConfig.textAlign,
+    textConfig.fontSize,
+    textConfig.textPosition
+  );
 
   const textTexture = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, textTexture);
@@ -125,29 +215,28 @@ export function startLavaLamp(
 
     gl.uniform1f(timeLocation, time);
 
-    const clusterCount = 20;
-    const wandererCount = 3;
     const totalBlobs = clusterCount + wandererCount;
     const blobData = new Float32Array(totalBlobs * 3);
 
+    // Cluster blobs: use clusterConfig for oscillatory behavior
     for (let i = 0; i < clusterCount; i++) {
-      const t = time * 0.3 + i;
-
+      const t = time * clusterConfig.speed + i;
       const baseX = (i + 0.5) / clusterCount;
-      const x = baseX + 0.03 * Math.sin(t + i);
-      const y = 0.1 + 0.05 * Math.cos(t * 1.3 + i * 2);
-      const r = 0.05 + 0.03 * Math.sin(t * 0.7);
+      const x = baseX + clusterConfig.xAmplitude * Math.sin(t + i);
+      const y = clusterConfig.baseY + clusterConfig.yAmplitude * Math.cos(t * 1.3 + i * 2);
+      const r = clusterConfig.sizeBase + clusterConfig.sizeAmplitude * Math.sin(t * 0.7);
       blobData[i * 3 + 0] = x;
       blobData[i * 3 + 1] = y;
       blobData[i * 3 + 2] = r;
     }
 
+    // Wanderer blobs: use wandererConfig for oscillatory behavior
     for (let i = 0; i < wandererCount; i++) {
       const j = clusterCount + i;
-      const t = time * 0.2 + i * 100;
-      const x = 0.5 + 0.45 * Math.sin(t * 0.7 + i);
-      const y = 0.5 + 0.45 * Math.cos(t * 0.9 + i * 2);
-      const r = 0.12 + 0.05 * Math.sin(t * 0.6 + i);
+      const t = time * wandererConfig.speed + i * 100;
+      const x = 0.5 + wandererConfig.xAmplitude * Math.sin(t * 0.7 + i);
+      const y = 0.5 + wandererConfig.yAmplitude * Math.cos(t * 0.9 + i * 2);
+      const r = wandererConfig.baseSize + wandererConfig.sizeAmplitude * Math.sin(t * 0.6 + i);
       blobData[j * 3 + 0] = x;
       blobData[j * 3 + 1] = y;
       blobData[j * 3 + 2] = r;

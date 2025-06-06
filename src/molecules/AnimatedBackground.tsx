@@ -1,5 +1,13 @@
 import React, {useEffect, useRef} from "react";
 import { startLavaLamp } from "./atoms/LavaLampCanvas";
+import type { ClusterConfig, WandererConfig, TextConfig } from "./atoms/LavaLampCanvas";
+
+const hexToRGBA = (hex: string, alpha = 1): [number, number, number, number] => {
+  const r = parseInt(hex.slice(1, 3), 16) / 255;
+  const g = parseInt(hex.slice(3, 5), 16) / 255;
+  const b = parseInt(hex.slice(5, 7), 16) / 255;
+  return [r, g, b, alpha];
+};
 
 const AnimatedBackground: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -16,7 +24,47 @@ const AnimatedBackground: React.FC = () => {
         window.addEventListener("resize", resize);
 
         document.fonts.load('700 48px Oswald').then(() => {
-            startLavaLamp(canvas);
+            const dynamicFontSize = Math.min(canvas.width / 10, 104);
+            const lavaColor = hexToRGBA('#bad4aa');
+            const backgroundColor = hexToRGBA('#000000', 0);
+
+            const clusterConfig: ClusterConfig = {
+                speed: 0.3,
+                xAmplitude: 0.03,
+                baseY: 0.1,
+                yAmplitude: 0.05,
+                sizeBase: 0.05,
+                sizeAmplitude: 0.03
+            };
+
+            const wandererConfig: WandererConfig = {
+                speed: 0.2,
+                xAmplitude: 0.45,
+                yAmplitude: 0.45,
+                baseSize: 0.12,
+                sizeAmplitude: 0.05
+            };
+
+            const textConfig: TextConfig = {
+                content: 'PRO\nGRAMMING\nPARTY',
+                font: 'oswald',
+                color: '#000000',
+                featureColor: '#e8871e',
+                textAlign: 'left',
+                fontSize: dynamicFontSize,
+                textPosition: [0.25, 0.5]
+            };
+
+            startLavaLamp(
+                canvas,
+                lavaColor,
+                backgroundColor,
+                20,
+                3,
+                clusterConfig,
+                wandererConfig,
+                textConfig
+            );
         });
         
         return () => {
