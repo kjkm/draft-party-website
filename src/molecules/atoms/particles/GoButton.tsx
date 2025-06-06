@@ -4,17 +4,19 @@ type GoButtonProps = {
   onClick?: () => void;
   children?: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 };
 
 const GoButton: React.FC<GoButtonProps> = ({
   onClick,
   children,
   className = "",
+  style = {},
 }) => {
   return (
     <button
       onClick={onClick}
-      style={{ fontFamily: "Oswald, sans-serif" }}
+      style={{ fontFamily: "Oswald, sans-serif", ...style }}
       className={`
         flex items-center justify-center gap-2 
         px-3 py-2 
