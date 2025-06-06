@@ -114,6 +114,11 @@ export function startLavaLamp(
   function render(time: number) {
     time *= 0.001; 
 
+    if (!gl) {
+      console.error("WebGL context lost");
+      return;
+    }
+
     gl.useProgram(program); 
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clear(gl.COLOR_BUFFER_BIT);
