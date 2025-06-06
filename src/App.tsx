@@ -4,7 +4,7 @@ import AnimatedBackground from './molecules/AnimatedBackground'
 import TopMenu from './molecules/TopMenu';
 
 
-const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+const handleClick = (e: MouseEvent) => {
   confetti("tsparticles", {
     count: 100,
     spread: 360,
