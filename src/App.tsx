@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { confetti } from "@tsparticles/confetti";
 import TopMenu from "./molecules/TopMenu";
 import HeroCanvas from "./molecules/HeroCanvas";
+import PageContainer from "./molecules/atoms/particles/PageContainer";
+import EditorWindow from "./molecules/atoms/particles/EditorWindow";
 
 const handleClick = (e: MouseEvent) => {
   confetti("tsparticles", {
@@ -25,9 +27,17 @@ function App() {
 
   return (
     <>
-      <div className="h-screen bg-sunshine">
+      <div className="h-screen bg-sunshine overflow-x-hidden">
         <TopMenu />
         <HeroCanvas />
+        <PageContainer>
+          <EditorWindow lines={[
+            "Hello, world!", 
+            "Programming Party is all about having fun while learning to code!",
+            "",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+          ]} title="welcome.tsx" style={{ position: "absolute", top: "20vh", left: "10vw" }} />
+        </PageContainer>
       </div>
     </>
   );

@@ -190,9 +190,10 @@ export function startLavaLamp(
     textConfig.textPosition
   );
 
+  // Convert text canvas to texture for WebGL
   const textTexture = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, textTexture);
-  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true); // required to not be upside down
   gl.texImage2D(
     gl.TEXTURE_2D,
     0,
@@ -212,6 +213,7 @@ export function startLavaLamp(
   gl.enable(gl.BLEND);
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
+  // Render loop
   function render(time: number) {
     time *= 0.001;
 
@@ -229,7 +231,6 @@ export function startLavaLamp(
     const totalBlobs = clusterCount + wandererCount;
     const blobData = new Float32Array(totalBlobs * 3);
 
-    // Cluster blobs: use clusterConfig for oscillatory behavior
     for (let i = 0; i < clusterCount; i++) {
       const t = time * clusterConfig.speed + i;
       const baseX = (i + 0.5) / clusterCount;
@@ -245,7 +246,6 @@ export function startLavaLamp(
       blobData[i * 3 + 2] = r;
     }
 
-    // Wanderer blobs: use wandererConfig for oscillatory behavior
     for (let i = 0; i < wandererCount; i++) {
       const j = clusterCount + i;
       const t = time * wandererConfig.speed + i * 100;

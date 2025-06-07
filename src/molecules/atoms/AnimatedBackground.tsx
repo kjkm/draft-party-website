@@ -7,7 +7,23 @@ import type {
 } from "./LavaLampCanvas";
 import { hexToRGBA } from "./particles/ColorUtils";
 
-const AnimatedBackground: React.FC = () => {
+type AnimatedBackgroundProps = {
+  textContent?: string;
+  lavaColor?: string;
+  clusterCount?: number;
+  wandererCount?: number;
+  clusterConfig?: ClusterConfig;
+  wandererConfig?: WandererConfig;
+}
+
+const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
+  textContent = "PRO.\nGRAMMING.\nPARTY!",
+  lavaColor: propLavaColor,
+  clusterCount = 20,
+  wandererCount = 3,
+  clusterConfig: propClusterConfig,
+  wandererConfig: propWandererConfig
+}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -23,10 +39,10 @@ const AnimatedBackground: React.FC = () => {
 
     document.fonts.load("700 48px Oswald").then(() => {
       const dynamicFontSize = Math.min(canvas.width / 10, 104);
-      const lavaColor = hexToRGBA("#bad4aa");
+      const lavaColor = hexToRGBA(propLavaColor ? propLavaColor : "#bad4aa");
       const backgroundColor = hexToRGBA("#000000", 0);
 
-      const clusterConfig: ClusterConfig = {
+      const defaultClusterConfig: ClusterConfig = {
         speed: 0.3,
         xAmplitude: 0.03,
         baseY: 0.1,
@@ -35,7 +51,7 @@ const AnimatedBackground: React.FC = () => {
         sizeAmplitude: 0.03,
       };
 
-      const wandererConfig: WandererConfig = {
+      const defaultWandererConfig: WandererConfig = {
         speed: 0.2,
         xAmplitude: 0.45,
         yAmplitude: 0.45,
@@ -44,7 +60,7 @@ const AnimatedBackground: React.FC = () => {
       };
 
       const textConfig: TextConfig = {
-        content: "PRO.\nGRAMMING.\nPARTY!",
+        content: textContent,
         font: "oswald",
         color: "#000000",
         featureColor: "#e8871e",
@@ -57,10 +73,10 @@ const AnimatedBackground: React.FC = () => {
         canvas,
         lavaColor,
         backgroundColor,
-        20,
-        3,
-        clusterConfig,
-        wandererConfig,
+        clusterCount,
+        wandererCount,
+        propClusterConfig ? propClusterConfig : defaultClusterConfig,
+        propWandererConfig ? propWandererConfig : defaultWandererConfig,
         textConfig
       );
     });
@@ -68,9 +84,9 @@ const AnimatedBackground: React.FC = () => {
     return () => {
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [textContent, propLavaColor, clusterCount, wandererCount, propClusterConfig, propWandererConfig]);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full z-0" />;
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-[85vh] z-0" />;
 };
 
 export default AnimatedBackground;

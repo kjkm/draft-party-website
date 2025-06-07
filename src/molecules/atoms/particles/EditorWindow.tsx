@@ -1,5 +1,5 @@
-import React from 'react';
-import { FaCode } from 'react-icons/fa'; 
+import React, { useRef, useEffect, useState } from 'react';
+import { FaCode } from 'react-icons/fa';
 
 type EditorWindowProps = {
   lines: string[];
@@ -12,14 +12,64 @@ const EditorWindow: React.FC<EditorWindowProps> = ({
   title = "index.tsx",
   style = {},
 }) => {
-  // Define any default inline styles you want.
-  const defaultStyle: React.CSSProperties = {
-    // for example, set padding or margins if needed
-    // padding: "1rem",
+  const defaultStyle: React.CSSProperties = {};
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [maxChars, setMaxChars] = useState<number>(25);
+
+  useEffect(() => {
+    const updateMaxChars = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.clientWidth;
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.font = "14px monospace";
+          const averageCharWidth = ctx.measureText("M").width;
+          const computedMaxChars = Math.floor(containerWidth / averageCharWidth) - 10;
+          setMaxChars(computedMaxChars > 0 ? computedMaxChars : 25);
+        }
+      }
+    };
+
+    updateMaxChars();
+    window.addEventListener('resize', updateMaxChars);
+    return () => window.removeEventListener('resize', updateMaxChars);
+  }, []);
+
+  const splitLine = (line: string, maxChars: number): string[] => {
+    if (line === "") {
+      return [""];
+    }
+
+    const words = line.split(' ');
+    const wrappedLines: string[] = [];
+    let currentLine = '';
+
+    words.forEach(word => {
+      if ((currentLine + (currentLine ? ' ' : '') + word).length > maxChars) {
+        wrappedLines.push(currentLine);
+        currentLine = word;
+      } else {
+        currentLine += (currentLine ? ' ' : '') + word;
+      }
+    });
+    if (currentLine) {
+      wrappedLines.push(currentLine);
+    }
+
+    return wrappedLines;
   };
+
+  const processedLines: string[] = [];
+  lines.forEach(line => {
+    const splits = splitLine(line, maxChars);
+    processedLines.push(...splits);
+  });
 
   return (
     <div
+      ref={containerRef}
       style={{ ...defaultStyle, ...style }}
       className="bg-[#1e1e1e] text-[#d4d4d4] font-mono text-sm rounded-md overflow-hidden shadow-lg w-full max-w-2xl border border-[#333]"
     >
@@ -30,7 +80,7 @@ const EditorWindow: React.FC<EditorWindowProps> = ({
 
       <div className="p-4 overflow-auto">
         <div className="flex flex-col space-y-1">
-          {lines.map((line, index) => (
+          {processedLines.map((line, index) => (
             <div key={index} className="flex">
               <span className="w-10 text-right pr-4 text-[#858585] select-none">
                 {index + 1}
