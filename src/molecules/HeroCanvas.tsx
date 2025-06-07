@@ -14,7 +14,7 @@ const HeroCanvas: React.FC = () => {
 
       const numLines = 3;
 
-      const textStartingPoint = 0.35 * window.innerHeight;
+      const textStartingPoint = 0.38 * window.innerHeight;
       const textHeight = numLines * dynamicFontSize;
       const computedTop = textStartingPoint + textHeight;
       setTopOffset(computedTop);
