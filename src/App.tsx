@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { confetti } from "@tsparticles/confetti";
 import TopMenu from "./molecules/TopMenu";
-import EditorWindow from "./molecules/atoms/particles/EditorWindow";
-import PageContainer from "./molecules/atoms/particles/PageContainer";
 import HeroCanvas from "./molecules/HeroCanvas";
 
 const handleClick = (e: MouseEvent) => {
