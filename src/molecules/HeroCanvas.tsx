@@ -5,14 +5,12 @@ import GoButton from "./atoms/particles/GoButton";
 const HeroCanvas: React.FC = () => {
   const [topOffset, setTopOffset] = useState(0);
   const [leftOffset, setLeftOffset] = useState(0);
-  const [dynamicFontSize, setDynamicFontSize] = useState(0);
 
   useEffect(() => {
     // Function to update go button offsets based on window size
     // This is because the button overlays on top of the rendered canvas text.
     const updateOffsets = () => {
       const dynamicFontSize = Math.min(window.innerWidth / 10, 104);
-      setDynamicFontSize(dynamicFontSize);
 
       const numLines = 3;
 
