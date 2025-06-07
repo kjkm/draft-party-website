@@ -1,5 +1,5 @@
-import vertexShaderSource from "./particles/vert.glsl?raw";
-import fragmentShaderSource from "./particles/frag.glsl?raw";
+import vertexShaderSource from "./vert.glsl?raw";
+import fragmentShaderSource from "./frag.glsl?raw";
 
 type RGBA = [number, number, number, number];
 

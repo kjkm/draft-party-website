@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import AnimatedBackground from "./atoms/AnimatedBackground";
-import GoButton from "./atoms/particles/GoButton";
+import AnimatedBackground from "./particles/AnimatedBackground";
+import GoButton from "./particles/GoButton";
 
 const HeroCanvas: React.FC = () => {
   const [topOffset, setTopOffset] = useState(0);

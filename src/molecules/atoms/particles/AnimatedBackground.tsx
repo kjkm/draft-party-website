@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from "react";
-import { startLavaLamp } from "./LavaLampCanvas";
+import { startLavaLamp } from "./glsl/LavaLampCanvas";
 import type {
   ClusterConfig,
   WandererConfig,
   TextConfig,
-} from "./LavaLampCanvas";
-import { hexToRGBA } from "./particles/ColorUtils";
+} from "./glsl/LavaLampCanvas";
+import { hexToRGBA } from "./ColorUtils";
 
 type AnimatedBackgroundProps = {
   textContent?: string;
